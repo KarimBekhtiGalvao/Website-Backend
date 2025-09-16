@@ -1,0 +1,22 @@
+{
+  "name": "vercel_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mistralai/mistralai": "^1.10.0",
+    "dotenv": "^17.2.2",
+    "next": "^14.2.32",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
