@@ -2,7 +2,7 @@
 import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY, // store your key in .env
+  apiKey: process.env.OPENROUTER_API_KEY, // store your OpenRouter key in .env
   baseURL: "https://openrouter.ai/api/v1",
 });
 
@@ -13,7 +13,7 @@ async function requestWithRetry(prompt, maxRetries = 5) {
       console.log(`Attempt ${attempt + 1} for prompt:`, prompt);
 
       const chatResponse = await client.chat.completions.create({
-        model: "mistralai/devstral-small-2505:free", // ✅ use free model
+        model: "mistralai/devstral-small-2505:free", // ✅ free model
         messages: [{ role: "user", content: prompt }],
       });
 
@@ -36,8 +36,18 @@ async function requestWithRetry(prompt, maxRetries = 5) {
 
 export async function POST(req) {
   try {
-    const { prompt } = await req.json();
+    // 🔐 Check auth header
+    const authHeader = req.headers.get("authorization");
+    const expected = `Bearer ${process.env.VERCEL_AUTOMATION_BYPASS_SECRET}`;
 
+    if (authHeader !== expected) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
+
+    // ✅ Continue if authorized
+    const { prompt } = await req.json();
     if (!prompt) {
       return new Response(JSON.stringify({ error: "Missing prompt" }), {
         status: 400,
